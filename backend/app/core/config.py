@@ -2,9 +2,12 @@ from pydantic_settings import BaseSettings
 from typing import List
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 
-# Load environment variables from root .env file
-load_dotenv(dotenv_path="../../.env")
+# Get the root directory (two levels up from this file)
+root_dir = Path(__file__).parent.parent.parent.parent
+env_path = root_dir / ".env"
+load_dotenv(dotenv_path=env_path)
 
 class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
