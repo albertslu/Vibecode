@@ -1,43 +1,65 @@
 from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any, List
-from datetime import datetime
+from typing import List, Optional, Dict, Any
 from enum import Enum
 
-class InterviewStatus(str, Enum):
-    PENDING = "pending"
-    PROCESSING = "processing"
-    COMPLETED = "completed"
-    FAILED = "failed"
+class InterviewTopic(str, Enum):
+    SOFTWARE_ENGINEERING = "Software Engineering"
+    PRODUCT_MANAGEMENT = "Product Management"
+    DATA_SCIENCE = "Data Science"
+    FRONTEND_ENGINEERING = "Frontend Engineering"
+    BACKEND_ENGINEERING = "Backend Engineering"
+    DEVOPS_ENGINEERING = "DevOps Engineering"
+    MOBILE_DEVELOPMENT = "Mobile Development"
+    MACHINE_LEARNING = "Machine Learning"
 
-class InterviewCreate(BaseModel):
+class DifficultyLevel(str, Enum):
+    JUNIOR = "junior"
+    MID_LEVEL = "mid-level"
+    SENIOR = "senior"
+    STAFF = "staff"
+
+class CompanyType(str, Enum):
+    STARTUP = "startup"
+    BIG_TECH = "big-tech"
+    ENTERPRISE = "enterprise"
+    CONSULTING = "consulting"
+
+class InterviewGenerationRequest(BaseModel):
+    topic: InterviewTopic
+    difficulty: DifficultyLevel = DifficultyLevel.MID_LEVEL
+    duration_minutes: int = Field(default=45, ge=15, le=120, description="Interview duration in minutes")
+    company_type: CompanyType = CompanyType.STARTUP
+    focus_areas: List[str] = Field(default=["technical", "behavioral"], description="Areas to focus on")
+    interviewer_name: Optional[str] = None
+    interviewee_name: Optional[str] = None
+
+class Exchange(BaseModel):
+    speaker: str  # "interviewer" or "interviewee"
+    text: str
+    timestamp: str  # Format: "MM:SS"
+
+class Chapter(BaseModel):
     title: str
-    youtube_url: Optional[str] = None
-    raw_transcript: str = Field(..., min_length=50, description="Plain text transcript content")
+    duration_minutes: int
+    description: str
+    exchanges: List[Exchange]
+
+class Participant(BaseModel):
+    name: str
+    role: str
+    company: Optional[str] = None
+
+class InterviewTranscript(BaseModel):
+    topic: str
+    difficulty: str
+    total_duration_minutes: int
+    participants: Dict[str, Participant]
+    chapters: List[Chapter]
+    metadata: Dict[str, Any] = {}
 
 class InterviewResponse(BaseModel):
-    id: str
-    title: str
-    youtube_url: Optional[str]
-    status: InterviewStatus
-    processed_at: Optional[datetime]
-    created_at: datetime
-    updated_at: datetime
-    
-    # Parsed content (if available)
-    intro_summary: Optional[str] = None
-    highlights: Optional[Dict[Any, Any]] = None
-    lowlights: Optional[Dict[Any, Any]] = None
-    key_entities: Optional[Dict[Any, Any]] = None
-
-class InterviewList(BaseModel):
-    id: str
-    title: str
-    status: InterviewStatus
-    created_at: datetime
-    processed_at: Optional[datetime]
-
-class ParsedContent(BaseModel):
-    intro_summary: str
-    highlights: Dict[Any, Any]
-    lowlights: Dict[Any, Any]
-    key_entities: Dict[Any, Any]
+    interview_id: str
+    status: str  # "generating", "completed", "failed"
+    interview: Optional[InterviewTranscript] = None
+    error_message: Optional[str] = None
+    generated_at: Optional[str] = None

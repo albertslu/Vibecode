@@ -1,13 +1,13 @@
-# Vibecode - YouTube Interview Transcript Parser
+# Vibecode - AI Interview Transcript Generator
 
-A full-stack application that processes YouTube interview transcripts and parses them into structured data including summaries, highlights, and executable tasks.
+An AI-powered application that generates realistic interview transcripts based on topics like Software Engineering, Product Management, Data Science, etc. Creates structured, chapter-based conversations between interviewer and interviewee.
 
 ## Architecture
 
 - **Backend**: FastAPI (Python)
 - **Frontend**: Next.js with Tailwind CSS
-- **Database**: Supabase (PostgreSQL)
-- **AI Processing**: OpenAI API
+- **AI Generation**: OpenAI GPT-4o Mini
+- **Storage**: Local file system / Optional cloud storage
 
 ## Project Structure
 
@@ -17,8 +17,8 @@ Vibecode/
 │   ├── app/
 │   │   ├── api/            # API routes
 │   │   ├── core/           # Core configuration
-│   │   ├── models/         # Database models
-│   │   ├── services/       # Business logic
+│   │   ├── services/       # AI generation logic
+│   │   ├── schemas/        # Data models
 │   │   └── main.py         # FastAPI app
 │   ├── requirements.txt
 │   └── Dockerfile
@@ -30,7 +30,6 @@ Vibecode/
 │   │   └── types/        # TypeScript types
 │   ├── package.json
 │   └── tailwind.config.js
-├── database/              # Database schemas and migrations
 └── docker-compose.yml     # Local development setup
 ```
 
@@ -39,7 +38,7 @@ Vibecode/
 ### Prerequisites
 - Python 3.11+
 - Node.js 18+
-- Docker (optional)
+- OpenAI API Key
 
 ### Backend Setup
 ```bash
@@ -56,17 +55,43 @@ npm run dev
 ```
 
 ### Environment Variables
-Copy `.env.example` to `.env` and fill in your configuration.
+Copy `env.template` to `.env` and add your OpenAI API key.
 
 ## Features
 
-- 📤 Upload YouTube transcript JSON files
-- 🤖 AI-powered parsing into structured content
-- 📋 Extract executable tasks and action items
-- 📊 Generate intro summaries and highlights
-- ✅ Task management and tracking
-- 🔍 Search and filter interviews
-- 📱 Responsive modern UI
+- 🎯 **Topic-based Generation**: Software Engineering, PM, Data Science interviews
+- 💬 **Realistic Dialogue**: Natural back-and-forth conversations
+- 📚 **Structured Chapters**: Frontend, Backend, System Design, Behavioral sections
+- ⚙️ **Customizable**: Interview length, difficulty, company type
+- 📄 **Multiple Formats**: JSON, plain text, formatted transcripts
+- 🎨 **Modern UI**: Clean, responsive interface
+
+## Sample Output
+
+```json
+{
+  "interview": {
+    "topic": "Software Engineering Interview",
+    "participants": {
+      "interviewer": "Sarah Chen, Senior Engineering Manager",
+      "interviewee": "Alex Rodriguez, Software Engineer"
+    },
+    "chapters": [
+      {
+        "title": "Frontend Development",
+        "duration": "15 minutes",
+        "exchanges": [
+          {
+            "speaker": "interviewer",
+            "text": "Can you walk me through how you'd optimize a React application?",
+            "timestamp": "05:30"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
 
 ## API Documentation
 
